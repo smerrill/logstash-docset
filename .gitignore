@@ -1,0 +1,4 @@
+docSet.dsidx
+logstash.docset/Contents/Resources/Documents/logstash.net/*
+*.swo
+*.swp
