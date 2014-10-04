@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h1>Add a new filter</h1>
+
+<p>This document shows you how to add a new filter to logstash.</p>
+
+<p>For a general overview of how to add a new plugin, see <a href="..html">the extending
+logstash</a> overview.</p>
+
+<h2>Write code.</h2>
+
+<p>Let's write a 'hello world' filter. This filter will replace the 'message' in
+the event with "Hello world!"</p>
+
+<p>First, logstash expects plugins in a certain directory structure: <code>logstash/TYPE/PLUGIN_NAME.rb</code></p>
+
+<p>Since we're creating a filter, let's mkdir this:</p>
+
+<pre><code>mkdir -p logstash/filters/
+cd logstash/filters
+</code></pre>
+
+<p>Now add the code:</p>
+
+<pre><code># Call this file 'foo.rb' (in logstash/filters, as above)
+require "logstash/filters/base"
+require "logstash/namespace"
+
+class LogStash::Filters::Foo &lt; LogStash::Filters::Base
+
+  # Setting the config_name here is required. This is how you
+  # configure this filter from your logstash config.
+  #
+  # filter {
+  #   foo { ... }
+  # }
+  config_name "foo"
+
+  # New plugins should start life at milestone 1.
+  milestone 1
+
+  # Replace the message with this value.
+  config :message, :validate =&gt; :string
+
+  public
+  def register
+    # nothing to do
+  end # def register
+
+  public
+  def filter(event)
+    # return nothing unless there's an actual filter event
+    return unless filter?(event)
+    if @message
+      # Replace the event message with our message as configured in the
+      # config file.
+      event["message"] = @message
+    end
+    # filter_matched should go in the last line of our successful code 
+    filter_matched(event)
+  end # def filter
+end # class LogStash::Filters::Foo
+</code></pre>
+
+<h2>Add it to your configuration</h2>
+
+<p>For this simple example, let's just use stdin input and stdout output.
+The config file looks like this:</p>
+
+<pre><code>input { 
+  stdin { type =&gt; "foo" } 
+}
+filter {
+  if [type] == "foo" {
+    foo {
+      message =&gt; "Hello world!"
+    }
+  }
+}
+output {
+  stdout { }
+}
+</code></pre>
+
+<p>Call this file 'example.conf'</p>
+
+<h2>Tell logstash about it.</h2>
+
+<p>Depending on how you installed logstash, you have a few ways of including this
+plugin.</p>
+
+<p>You can use the agent flag --pluginpath flag to specify where the root of your
+plugin tree is. In our case, it's the current directory.</p>
+
+<pre><code>% bin/logstash --pluginpath your/plugin/root -f example.conf
+</code></pre>
+
+<h2>Example running</h2>
+
+<p>In the example below, I typed in "the quick brown fox" after running the java
+command.</p>
+
+<pre><code>% bin/logstash -f example.conf
+the quick brown fox   
+2011-05-12T01:05:09.495000Z stdin://snack.home/: Hello world!
+</code></pre>
+
+<p>The output is the standard logstash stdout output, but in this case our "the
+quick brown fox" message was replaced with "Hello world!"</p>
+
+<p>All done! :)</p>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

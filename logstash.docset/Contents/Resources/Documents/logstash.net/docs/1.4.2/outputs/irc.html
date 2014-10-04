@@ -1,0 +1,369 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h2>irc</h2>
+<h3>Milestone: <a href="../plugin-milestones.html">1</a>
+</h3>
+
+<p>Write events to IRC</p>
+
+
+<h3> Synopsis </h3>
+
+This is what it might look like in your config file:
+
+<pre><code>output {
+  irc {
+    <a href="#channels">channels</a> =&gt; ... # array (required)
+    <a href="#codec">codec</a> =&gt; ... # codec (optional), default: "plain"
+    <a href="#format">format</a> =&gt; ... # string (optional), default: "%{message}"
+    <a href="#host">host</a> =&gt; ... # string (required)
+    <a href="#messages_per_second">messages_per_second</a> =&gt; ... # number (optional), default: 0.5
+    <a href="#nick">nick</a> =&gt; ... # string (optional), default: "logstash"
+    <a href="#password">password</a> =&gt; ... # password (optional)
+    <a href="#port">port</a> =&gt; ... # number (optional), default: 6667
+    <a href="#post_string">post_string</a> =&gt; ... # string (optional)
+    <a href="#pre_string">pre_string</a> =&gt; ... # string (optional)
+    <a href="#real">real</a> =&gt; ... # string (optional), default: "logstash"
+    <a href="#secure">secure</a> =&gt; ... # boolean (optional), default: false
+    <a href="#user">user</a> =&gt; ... # string (optional), default: "logstash"
+    <a href="#workers">workers</a> =&gt; ... # number (optional), default: 1
+  }
+}
+</code></pre>
+
+<h3> Details </h3>
+
+<h4> 
+  <a name="channels">
+    channels (required setting)
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>Channels to broadcast to.</p>
+
+<p>These should be full channel names including the ‘#’ symbol, such as
+“#logstash”.</p>
+
+
+<h4> 
+  <a name="codec">
+    codec
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#codec">codec</a> </li>
+  <li> Default value is "plain" </li>
+</ul>
+
+<p>The codec used for output data. Output codecs are a convenient method for encoding your data before it leaves the output, without needing a separate filter in your Logstash pipeline.</p>
+
+
+<h4> 
+  <a name="exclude_tags">
+    exclude_tags
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>Only handle events without any of these tags. Note this check is additional to type and tags.</p>
+
+
+<h4> 
+  <a name="format">
+    format
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "%{message}" </li>
+</ul>
+
+<p>Message format to send, event tokens are usable here</p>
+
+
+<h4> 
+  <a name="host">
+    host (required setting)
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>Address of the host to connect to</p>
+
+
+<h4> 
+  <a name="messages_per_second">
+    messages_per_second
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#number">number</a> </li>
+  <li> Default value is 0.5 </li>
+</ul>
+
+<p>Limit the rate of messages sent to IRC in messages per second.</p>
+
+
+<h4> 
+  <a name="nick">
+    nick
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "logstash" </li>
+</ul>
+
+<p>IRC Nickname</p>
+
+
+<h4> 
+  <a name="password">
+    password
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#password">password</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>IRC server password</p>
+
+
+<h4> 
+  <a name="port">
+    port
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#number">number</a> </li>
+  <li> Default value is 6667 </li>
+</ul>
+
+<p>Port on host to connect to.</p>
+
+
+<h4> 
+  <a name="post_string">
+    post_string
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>Static string after event</p>
+
+
+<h4> 
+  <a name="pre_string">
+    pre_string
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>Static string before event</p>
+
+
+<h4> 
+  <a name="real">
+    real
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "logstash" </li>
+</ul>
+
+<p>IRC Real name</p>
+
+
+<h4> 
+  <a name="secure">
+    secure
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#boolean">boolean</a> </li>
+  <li> Default value is false </li>
+</ul>
+
+<p>Set this to true to enable SSL.</p>
+
+
+<h4> 
+  <a name="tags">
+    tags
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>Only handle events with all of these tags.  Note that if you specify
+a type, the event must also match that type.
+Optional.</p>
+
+
+<h4> 
+  <a name="type">
+    type
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "" </li>
+</ul>
+
+<p>The type to act on. If a type is given, then this output will only
+act on messages with the same type. See any input plugin’s “type”
+attribute for more.
+Optional.</p>
+
+
+<h4> 
+  <a name="user">
+    user
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "logstash" </li>
+</ul>
+
+<p>IRC Username</p>
+
+
+<h4> 
+  <a name="workers">
+    workers
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#number">number</a> </li>
+  <li> Default value is 1 </li>
+</ul>
+
+<p>The number of workers to use for this output.
+Note that this setting may not be useful for all outputs.</p>
+
+
+
+<hr>
+
+This is documentation from <a href="https://github.com/logstash/logstash/blob/v1.4.2/lib/logstash/outputs/irc.rb">lib/logstash/outputs/irc.rb</a>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

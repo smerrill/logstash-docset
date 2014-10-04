@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h2>netflow</h2>
+<h3>Milestone: <a href="../plugin-milestones.html">1</a>
+</h3>
+
+<p>The “netflow” codec is for decoding Netflow v5/v9 flows.</p>
+
+
+<h3> Synopsis </h3>
+
+This is what it might look like in your config file:
+
+<pre><code># with an input plugin:
+# you can also use this codec with an output.
+input { 
+  file {
+    codec =&gt; netflow {
+      <a href="#cache_ttl">cache_ttl</a> =&gt; ... # number (optional), default: 4000
+      <a href="#definitions">definitions</a> =&gt; ... # a valid filesystem path (optional)
+      <a href="#target">target</a> =&gt; ... # string (optional), default: "netflow"
+      <a href="#versions">versions</a> =&gt; ... # array (optional), default: [5, 9]
+    }
+  }
+}
+</code></pre>
+
+<h3> Details </h3>
+
+<h4> 
+  <a name="cache_ttl">
+    cache_ttl
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#number">number</a> </li>
+  <li> Default value is 4000 </li>
+</ul>
+
+<p>Netflow v9 template cache TTL (minutes)</p>
+
+
+<h4> 
+  <a name="definitions">
+    definitions
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#path">path</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>Override YAML file containing Netflow field definitions</p>
+
+<p>Each Netflow field is defined like so:</p>
+
+<hr>
+<p>id:
+   - default length in bytes
+   - :name
+   id:
+   - :uintN or :ip4_addr or :ip6_addr or :mac_addr or :string
+   - :name
+   id:
+   - :skip</p>
+
+<p>See <a href="https://github.com/logstash/logstash/tree/v1.4.2/lib/logstash/codecs/netflow/netflow.yaml">https://github.com/logstash/logstash/tree/v1.4.2/lib/logstash/codecs/netflow/netflow.yaml</a> for the base set.</p>
+
+
+<h4> 
+  <a name="target">
+    target
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "netflow" </li>
+</ul>
+
+<p>Specify into what field you want the Netflow data.</p>
+
+
+<h4> 
+  <a name="versions">
+    versions
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [5, 9] </li>
+</ul>
+
+<p>Specify which Netflow versions you will accept.</p>
+
+
+
+<hr>
+
+This is documentation from <a href="https://github.com/logstash/logstash/blob/v1.4.2/lib/logstash/codecs/netflow.rb">lib/logstash/codecs/netflow.rb</a>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

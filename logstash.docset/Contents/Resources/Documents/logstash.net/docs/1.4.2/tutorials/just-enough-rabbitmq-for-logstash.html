@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <p>While configuring your RabbitMQ broker is out of scope for logstash, it's important
+to understand how logstash uses RabbitMQ. To do that, we need to understand a
+little about AMQP.</p>
+
+<p>You should also consider reading
+<a href="http://www.rabbitmq.com/tutorials/amqp-concepts.html">this</a> at the RabbitMQ
+website.</p>
+
+<h1>Exchanges, queues and bindings; OH MY!</h1>
+
+<p>You can get a long way by understanding a few key terms.</p>
+
+<h2>Exchanges</h2>
+
+<p>Exchanges are for message <strong>producers</strong>. In Logstash, we map these to
+<strong>outputs</strong>.  Logstash puts messages on exchanges.  There are many types of
+exchanges and they are discussed below.</p>
+
+<h2>Queues</h2>
+
+<p>Queues are for message <strong>consumers</strong>. In Logstash, we map these to inputs.
+Logstash reads messages from queues.  Optionally, queues can consume only a
+subset of messages. This is done with "routing keys".</p>
+
+<h2>Bindings</h2>
+
+<p>Just having a producer and a consumer is not enough. We must <code>bind</code> a queue to
+an exchange.  When we bind a queue to an exchange, we can optionally provide a
+routing key.  Routing keys are discussed below.</p>
+
+<h2>Broker</h2>
+
+<p>A broker is simply the AMQP server software. There are several brokers, but this
+tutorial will cover the most common (and arguably popular), <a href="http://www.rabbitmq.com">RabbitMQ</a>.</p>
+
+<h1>Routing Keys</h1>
+
+<p>Simply put, routing keys are somewhat like tags for messages. In practice, they
+are hierarchical in nature with the each level separated by a dot:</p>
+
+<ul>
+<li><code>messages.servers.production</code></li>
+<li><code>sports.atlanta.baseball</code></li>
+<li><code>company.myorg.mydepartment</code></li>
+</ul>
+
+
+<p>Routing keys are really handy with a tool like logstash where you
+can programatically define the routing key for a given event using the metadata that logstash provides:</p>
+
+<ul>
+<li><code>logs.servers.production.host1</code></li>
+<li><code>logs.servers.development.host1.syslog</code></li>
+<li><code>logs.servers.application_foo.critical</code></li>
+</ul>
+
+
+<p>From a consumer/queue perspective, routing keys also support two types wildcards - <code>#</code> and <code>*</code>.</p>
+
+<ul>
+<li>
+<code>*</code> (asterisk) matches any single word.</li>
+<li>
+<code>#</code> (hash) matches any number of words and behaves like a traditional wildcard.</li>
+</ul>
+
+
+<p>Using the above examples, if you wanted to bind to an exchange and see messages
+for just production, you would use the routing key <code>logs.servers.production.*</code>.
+If you wanted to see messages for host1, regardless of environment you could
+use <code>logs.servers.%.host1.#</code>.</p>
+
+<p>Wildcards can be a bit confusing but a good general rule to follow is to use
+<code>*</code> in places where you need wildcards for a known element.  Use <code>#</code> when you
+need to match any remaining placeholders. Note that wildcards in routing keys
+only make sense on the consumer/queue binding, not in the publishing/exchange
+side.</p>
+
+<p>We'll get into some of that neat stuff below. For now, it's enough to
+understand the general idea behind routing keys.</p>
+
+<h1>Exchange types</h1>
+
+<p>There are three primary types of exchanges that you'll see.</p>
+
+<h2>Direct</h2>
+
+<p>A direct exchange is one that is probably most familiar to people. Message
+comes in and, assuming there is a queue bound, the message is picked up.  You
+can have multiple queues bound to the same direct exchange. The best way to
+understand this pattern is pool of workers (queues) that read from a direct
+exchange to get units of work. Only one consumer will see a given message in a
+direct exchange.</p>
+
+<p>You can set routing keys on messages published to a direct exchange. This
+allows you do have workers that do different tasks read from the same global
+pool of messages yet consume only the ones they know how to handle.</p>
+
+<p>The RabbitMQ concepts guide (linked below) does a good job of describing this
+visually
+<a href="http://www.rabbitmq.com/img/tutorials/intro/exchange-direct.png">here</a></p>
+
+<h2>Fanout</h2>
+
+<p>Fanouts are another type of exchange. Unlike direct exchanges, every queue
+bound to a fanout exchange will see the same messages.  This is best described
+as a PUB/SUB pattern. This is helpful when you need broadcast messages to
+multiple interested parties.</p>
+
+<p>Fanout exchanges do NOT support routing keys. All bound queues see all
+messages.</p>
+
+<h2>Topic</h2>
+
+<p>Topic exchanges are special type of fanout exchange. Fanout exchanges don't
+support routing keys. Topic exchanges do support them.  Just like a fanout
+exchange, all bound queues see all messages with the additional filter of the
+routing key.</p>
+
+<h1>RabbitMQ in logstash</h1>
+
+<p>As stated earlier, in Logstash, Outputs publish to Exchanges. Inputs read from
+Queues that are bound to Exchanges.  Logstash uses the <code>bunny</code> RabbitMQ library for
+interaction with a broker. Logstash endeavors to expose as much of the
+configuration for both exchanges and queues.  There are many different tunables
+that you might be concerned with setting - including things like message
+durability or persistence of declared queues/exchanges.  See the relevant input
+and output documentation for RabbitMQ for a full list of tunables.</p>
+
+<h1>Sample configurations, tips, tricks and gotchas</h1>
+
+<p>There are several examples in the logstash source directory of RabbitMQ usage,
+however a few general rules might help eliminate any issues.</p>
+
+<h2>Check your bindings</h2>
+
+<p>If logstash is publishing the messages and logstash is consuming the messages,
+the <code>exchange</code> value for the input should match the <code>name</code> in the output.</p>
+
+<p>sender agent</p>
+
+<pre><code>input { stdin { type = "test" } }
+output {
+  rabbitmq {
+    exchange =&gt; "test_exchange"
+    host =&gt; "my_rabbitmq_server"
+    exchange_type =&gt; "fanout"
+  }
+}
+</code></pre>
+
+<p>receiver agent</p>
+
+<pre><code>input {
+  rabbitmq {
+    queue =&gt; "test_queue"
+    host =&gt; "my_rabbitmq_server"
+    exchange =&gt; "test_exchange" # This matches the exchange declared above
+  }
+}
+output { stdout { debug =&gt; true }}
+</code></pre>
+
+<h2>Message persistence</h2>
+
+<p>By default, logstash will attempt to ensure that you don't lose any messages.
+This is reflected in the RabbitMQ default settings as well.  However there are
+cases where you might not want this. A good example is where RabbitMQ is not your
+primary method of shipping.</p>
+
+<p>In the following example, we use RabbitMQ as a sniffing interface. Our primary
+destination is the embedded ElasticSearch instance. We have a secondary RabbitMQ
+output that we use for duplicating messages. However we disable persistence and
+durability on this interface so that messages don't pile up waiting for
+delivery. We only use RabbitMQ when we want to watch messages in realtime.
+Additionally, we're going to leverage routing keys so that we can optionally
+filter incoming messages to subsets of hosts. The exercise of getting messages
+to this logstash agent are left up to the user.</p>
+
+<pre><code>input { 
+  # some input definition here
+}
+
+output {
+  elasticsearch { embedded =&gt; true }
+  rabbitmq {
+    exchange =&gt; "logtail"
+    host =&gt; "my_rabbitmq_server"
+    exchange_type =&gt; "topic" # We use topic here to enable pub/sub with routing keys
+    key =&gt; "logs.%{host}"
+    durable =&gt; false # If rabbitmq restarts, the exchange disappears.
+    auto_delete =&gt; true # If logstash disconnects, the exchange goes away
+    persistent =&gt; false # Messages are not persisted to disk
+  }
+}
+</code></pre>
+
+<p>Now if you want to stream logs in realtime, you can use the programming
+language of your choice to bind a queue to the <code>logtail</code> exchange.  If you do
+not specify a routing key, you will see every message that comes in to
+logstash. However, you can specify a routing key like <code>logs.apache1</code> and see
+only messages from host <code>apache1</code>.</p>
+
+<p>Note that any logstash variable is valid in the key definition. This allows you
+to create really complex routing key hierarchies for advanced filtering.</p>
+
+<p>Note that RabbitMQ has specific rules about durability and persistence matching
+on both the queue and exchange. You should read the RabbitMQ documentation to
+make sure you don't crash your RabbitMQ server with messages awaiting someone
+to pick them up.</p>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

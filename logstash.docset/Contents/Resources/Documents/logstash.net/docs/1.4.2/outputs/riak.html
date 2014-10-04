@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h2>riak</h2>
+<h3>Milestone: <a href="../plugin-milestones.html">1</a>
+</h3>
+<div class="community-plugin-notice">
+  <strong>This is a community-contributed plugin!</strong> It does not ship with logstash by default, but it is easy to install!
+  To use this, you must have <a href="../contrib-plugins.html">installed the contrib plugins package</a>.
+</div>
+
+<p>Riak is a distributed k/v store from Basho.
+It’s based on the Dynamo model.</p>
+
+
+<h3> Synopsis </h3>
+
+This is what it might look like in your config file:
+
+<pre><code>output {
+  riak {
+    <a href="#bucket">bucket</a> =&gt; ... # array (optional), default: ["logstash-%{+YYYY.MM.dd}"]
+    <a href="#bucket_props">bucket_props</a> =&gt; ... # hash (optional)
+    <a href="#codec">codec</a> =&gt; ... # codec (optional), default: "plain"
+    <a href="#enable_search">enable_search</a> =&gt; ... # boolean (optional), default: false
+    <a href="#enable_ssl">enable_ssl</a> =&gt; ... # boolean (optional), default: false
+    <a href="#indices">indices</a> =&gt; ... # array (optional)
+    <a href="#key_name">key_name</a> =&gt; ... # string (optional)
+    <a href="#nodes">nodes</a> =&gt; ... # hash (optional), default: {"localhost"=&gt;"8098"}
+    <a href="#proto">proto</a> =&gt; ... # string, one of ["http", "pb"] (optional), default: "http"
+    <a href="#ssl_opts">ssl_opts</a> =&gt; ... # hash (optional)
+    <a href="#workers">workers</a> =&gt; ... # number (optional), default: 1
+  }
+}
+</code></pre>
+
+<h3> Details </h3>
+
+<h4> 
+  <a name="bucket">
+    bucket
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is ["logstash-%{+YYYY.MM.dd}"] </li>
+</ul>
+
+<p>The bucket name to write events to
+Expansion is supported here as values are 
+passed through event.sprintf
+Multiple buckets can be specified here
+but any bucket-specific settings defined
+apply to ALL the buckets.</p>
+
+
+<h4> 
+  <a name="bucket_props">
+    bucket_props
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#hash">hash</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>Bucket properties (NYI)
+Logstash hash of properties for the bucket
+i.e.
+<code>bucket_props =&gt; ["r", "one", "w", "one", "dw", "one"]</code>
+or
+<code>bucket_props =&gt; ["n_val", "3"]</code>
+Note that the Logstash config language cannot support
+hash or array values
+Properties will be passed as-is</p>
+
+
+<h4> 
+  <a name="codec">
+    codec
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#codec">codec</a> </li>
+  <li> Default value is "plain" </li>
+</ul>
+
+<p>The codec used for output data. Output codecs are a convenient method for encoding your data before it leaves the output, without needing a separate filter in your Logstash pipeline.</p>
+
+
+<h4> 
+  <a name="enable_search">
+    enable_search
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#boolean">boolean</a> </li>
+  <li> Default value is false </li>
+</ul>
+
+<p>Search
+Enable search on the bucket defined above</p>
+
+
+<h4> 
+  <a name="enable_ssl">
+    enable_ssl
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#boolean">boolean</a> </li>
+  <li> Default value is false </li>
+</ul>
+
+<p>SSL
+Enable SSL</p>
+
+
+<h4> 
+  <a name="exclude_tags">
+    exclude_tags
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>Only handle events without any of these tags. Note this check is additional to type and tags.</p>
+
+
+<h4> 
+  <a name="indices">
+    indices
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>Indices
+Array of fields to add 2i on
+e.g.
+`indices =&gt; [“source_host”, “type”]
+Off by default as not everyone runs eleveldb</p>
+
+
+<h4> 
+  <a name="key_name">
+    key_name
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>The event key name
+variables are valid here.</p>
+
+<p>Choose this carefully. Best to let riak decide….</p>
+
+
+<h4> 
+  <a name="nodes">
+    nodes
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#hash">hash</a> </li>
+  <li> Default value is {"localhost"=&gt;"8098"} </li>
+</ul>
+
+<p>The nodes of your Riak cluster
+This can be a single host or
+a Logstash hash of node/port pairs
+e.g
+[“node1”, “8098”, “node2”, “8098”]</p>
+
+
+<h4> 
+  <a name="proto">
+    proto
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value can be any of: "http", "pb" </li>
+  <li> Default value is "http" </li>
+</ul>
+
+<p>The protocol to use
+HTTP or ProtoBuf
+Applies to ALL backends listed above
+No mix and match</p>
+
+
+<h4> 
+  <a name="ssl_opts">
+    ssl_opts
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#hash">hash</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>SSL Options
+Options for SSL connections
+Only applied if SSL is enabled
+Logstash hash that maps to the riak-client options
+here: https://github.com/basho/riak-ruby-client/wiki/Connecting-to-Riak
+You’ll likely want something like this:
+<code>ssl_opts =&gt; ["pem", "/etc/riak.pem", "ca_path", "/usr/share/certificates"]
+Per the riak client docs, the above sample options
+will turn on SSL </code>VERIFY_PEER`</p>
+
+
+<h4> 
+  <a name="tags">
+    tags
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>Only handle events with all of these tags.  Note that if you specify
+a type, the event must also match that type.
+Optional.</p>
+
+
+<h4> 
+  <a name="type">
+    type
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "" </li>
+</ul>
+
+<p>The type to act on. If a type is given, then this output will only
+act on messages with the same type. See any input plugin’s “type”
+attribute for more.
+Optional.</p>
+
+
+<h4> 
+  <a name="workers">
+    workers
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#number">number</a> </li>
+  <li> Default value is 1 </li>
+</ul>
+
+<p>The number of workers to use for this output.
+Note that this setting may not be useful for all outputs.</p>
+
+
+
+<hr>
+
+This is documentation from <a href="https://github.com/logstash/logstash/blob/v1.4.2/lib/logstash/outputs/riak.rb">lib/logstash/outputs/riak.rb</a>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <div id="doc_index_container">
+
+  <h3> For Users </h3>
+  <ul>
+    <li> <a href="https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz"> download logstash 1.4.2 </a> </li>
+    <li> <a href="release-notes.html"> upgrade/release notes </a> </li>
+    <li> <a href="https://github.com/elasticsearch/logstash/blob/v1.4.2/CHANGELOG"> view changelog </a> </li>
+    <li> <a href="contrib-plugins.html"> contrib plugins</a> </li>
+    <li> <a href="repositories.html"> package repositories</a> </li>
+    <li> <a href="configuration.html"> configuration file overview </a> </li>
+    <li> <a href="configuration.html#conditionals">conditionals</a> </li>
+    <li> <a href="configuration.html#fieldreferences">referring to fields [like][this]</a> </li>
+    <li> <a href="configuration.html#sprintf">using the %{fieldname} syntax</a> </li>
+
+    <li> <a href="life-of-an-event.html"> the life of an event in logstash </a> </li>
+    <li> <a href="flags.html"> command-line flags </a> </li>
+  </ul>
+
+  <h3> For Developers </h3>
+  <ul>
+    <li> <a href="extending.html"> writing your own plugins </a> </li>
+  </ul>
+
+  <h3> Tutorials and Use Cases </h3>
+
+  <ul>
+    <li> <a href="tutorials/getting-started-with-logstash.html"> Getting started with Logstash </a> - New to Logstash? Start here! </li>
+    <li> <a href="tutorials/metrics-from-logs.html"> Metrics from logs </a> - take metrics from logs and ship them to graphite, ganglia, and more. </li>
+    <li> <a href="tutorials/just-enough-rabbitmq-for-logstash.html">Just enough RabbitMQ knowledge for Logstash </a> - Get a quick primer on RabbitMQ and how to use it in Logstash! </li>
+  </ul>
+
+  <h3> books and articles </h3>
+
+  <ul>
+    <li> <a href="http://www.logstashbook.com">The Logstash Book </a> - An introductory Logstash book. </li>
+  </ul>
+
+  <h3> plugin documentation </h3>
+  <div class="doc_index_section">
+    <h3>inputs</h3>
+    <ul>
+      <li>
+      <a href="inputs/collectd.html">collectd</a>
+      </li>
+      <li>
+      <a href="inputs/drupal_dblog.html">drupal_dblog</a>
+      </li>
+      <li>
+      <a href="inputs/elasticsearch.html">elasticsearch</a>
+      </li>
+      <li>
+      <a href="inputs/eventlog.html">eventlog</a>
+      </li>
+      <li>
+      <a href="inputs/exec.html">exec</a>
+      </li>
+      <li>
+      <a href="inputs/file.html">file</a>
+      </li>
+      <li>
+      <a href="inputs/ganglia.html">ganglia</a>
+      </li>
+      <li>
+      <a href="inputs/gelf.html">gelf</a>
+      </li>
+      <li>
+      <a href="inputs/gemfire.html">gemfire</a>
+      </li>
+      <li>
+      <a href="inputs/generator.html">generator</a>
+      </li>
+      <li>
+      <a href="inputs/graphite.html">graphite</a>
+      </li>
+      <li>
+      <a href="inputs/heroku.html">heroku</a>
+      </li>
+      <li>
+      <a href="inputs/imap.html">imap</a>
+      </li>
+      <li>
+      <a href="inputs/invalid_input.html">invalid_input</a>
+      </li>
+      <li>
+      <a href="inputs/irc.html">irc</a>
+      </li>
+      <li>
+      <a href="inputs/jmx.html">jmx</a>
+      </li>
+      <li>
+      <a href="inputs/log4j.html">log4j</a>
+      </li>
+      <li>
+      <a href="inputs/lumberjack.html">lumberjack</a>
+      </li>
+      <li>
+      <a href="inputs/pipe.html">pipe</a>
+      </li>
+      <li>
+      <a href="inputs/puppet_facter.html">puppet_facter</a>
+      </li>
+      <li>
+      <a href="inputs/rabbitmq.html">rabbitmq</a>
+      </li>
+      <li>
+      <a href="inputs/rackspace.html">rackspace</a>
+      </li>
+      <li>
+      <a href="inputs/redis.html">redis</a>
+      </li>
+      <li>
+      <a href="inputs/relp.html">relp</a>
+      </li>
+      <li>
+      <a href="inputs/s3.html">s3</a>
+      </li>
+      <li>
+      <a href="inputs/snmptrap.html">snmptrap</a>
+      </li>
+      <li>
+      <a href="inputs/sqlite.html">sqlite</a>
+      </li>
+      <li>
+      <a href="inputs/sqs.html">sqs</a>
+      </li>
+      <li>
+      <a href="inputs/stdin.html">stdin</a>
+      </li>
+      <li>
+      <a href="inputs/stomp.html">stomp</a>
+      </li>
+      <li>
+      <a href="inputs/syslog.html">syslog</a>
+      </li>
+      <li>
+      <a href="inputs/tcp.html">tcp</a>
+      </li>
+      <li>
+      <a href="inputs/twitter.html">twitter</a>
+      </li>
+      <li>
+      <a href="inputs/udp.html">udp</a>
+      </li>
+      <li>
+      <a href="inputs/unix.html">unix</a>
+      </li>
+      <li>
+      <a href="inputs/varnishlog.html">varnishlog</a>
+      </li>
+      <li>
+      <a href="inputs/websocket.html">websocket</a>
+      </li>
+      <li>
+      <a href="inputs/wmi.html">wmi</a>
+      </li>
+      <li>
+      <a href="inputs/xmpp.html">xmpp</a>
+      </li>
+      <li>
+      <a href="inputs/zenoss.html">zenoss</a>
+      </li>
+      <li>
+      <a href="inputs/zeromq.html">zeromq</a>
+      </li>
+    </ul>
+  </div>
+  <div class="doc_index_section">
+    <h3>codecs</h3>
+    <ul>
+      <li>
+      <a href="codecs/cloudtrail.html">cloudtrail</a>
+      </li>
+      <li>
+      <a href="codecs/collectd.html">collectd</a>
+      </li>
+      <li>
+      <a href="codecs/compress_spooler.html">compress_spooler</a>
+      </li>
+      <li>
+      <a href="codecs/dots.html">dots</a>
+      </li>
+      <li>
+      <a href="codecs/edn.html">edn</a>
+      </li>
+      <li>
+      <a href="codecs/edn_lines.html">edn_lines</a>
+      </li>
+      <li>
+      <a href="codecs/fluent.html">fluent</a>
+      </li>
+      <li>
+      <a href="codecs/graphite.html">graphite</a>
+      </li>
+      <li>
+      <a href="codecs/json.html">json</a>
+      </li>
+      <li>
+      <a href="codecs/json_lines.html">json_lines</a>
+      </li>
+      <li>
+      <a href="codecs/json_spooler.html">json_spooler</a>
+      </li>
+      <li>
+      <a href="codecs/line.html">line</a>
+      </li>
+      <li>
+      <a href="codecs/msgpack.html">msgpack</a>
+      </li>
+      <li>
+      <a href="codecs/multiline.html">multiline</a>
+      </li>
+      <li>
+      <a href="codecs/netflow.html">netflow</a>
+      </li>
+      <li>
+      <a href="codecs/noop.html">noop</a>
+      </li>
+      <li>
+      <a href="codecs/oldlogstashjson.html">oldlogstashjson</a>
+      </li>
+      <li>
+      <a href="codecs/plain.html">plain</a>
+      </li>
+      <li>
+      <a href="codecs/rubydebug.html">rubydebug</a>
+      </li>
+      <li>
+      <a href="codecs/spool.html">spool</a>
+      </li>
+    </ul>
+  </div>
+  <div class="doc_index_section">
+    <h3>filters</h3>
+    <ul>
+      <li>
+      <a href="filters/advisor.html">advisor</a>
+      </li>
+      <li>
+      <a href="filters/alter.html">alter</a>
+      </li>
+      <li>
+      <a href="filters/anonymize.html">anonymize</a>
+      </li>
+      <li>
+      <a href="filters/checksum.html">checksum</a>
+      </li>
+      <li>
+      <a href="filters/cidr.html">cidr</a>
+      </li>
+      <li>
+      <a href="filters/cipher.html">cipher</a>
+      </li>
+      <li>
+      <a href="filters/clone.html">clone</a>
+      </li>
+      <li>
+      <a href="filters/collate.html">collate</a>
+      </li>
+      <li>
+      <a href="filters/csv.html">csv</a>
+      </li>
+      <li>
+      <a href="filters/date.html">date</a>
+      </li>
+      <li>
+      <a href="filters/dns.html">dns</a>
+      </li>
+      <li>
+      <a href="filters/drop.html">drop</a>
+      </li>
+      <li>
+      <a href="filters/elapsed.html">elapsed</a>
+      </li>
+      <li>
+      <a href="filters/elasticsearch.html">elasticsearch</a>
+      </li>
+      <li>
+      <a href="filters/environment.html">environment</a>
+      </li>
+      <li>
+      <a href="filters/extractnumbers.html">extractnumbers</a>
+      </li>
+      <li>
+      <a href="filters/fingerprint.html">fingerprint</a>
+      </li>
+      <li>
+      <a href="filters/gelfify.html">gelfify</a>
+      </li>
+      <li>
+      <a href="filters/geoip.html">geoip</a>
+      </li>
+      <li>
+      <a href="filters/grep.html">grep</a>
+      </li>
+      <li>
+      <a href="filters/grok.html">grok</a>
+      </li>
+      <li>
+      <a href="filters/grokdiscovery.html">grokdiscovery</a>
+      </li>
+      <li>
+      <a href="filters/i18n.html">i18n</a>
+      </li>
+      <li>
+      <a href="filters/json.html">json</a>
+      </li>
+      <li>
+      <a href="filters/json_encode.html">json_encode</a>
+      </li>
+      <li>
+      <a href="filters/kv.html">kv</a>
+      </li>
+      <li>
+      <a href="filters/metaevent.html">metaevent</a>
+      </li>
+      <li>
+      <a href="filters/metrics.html">metrics</a>
+      </li>
+      <li>
+      <a href="filters/multiline.html">multiline</a>
+      </li>
+      <li>
+      <a href="filters/mutate.html">mutate</a>
+      </li>
+      <li>
+      <a href="filters/noop.html">noop</a>
+      </li>
+      <li>
+      <a href="filters/prune.html">prune</a>
+      </li>
+      <li>
+      <a href="filters/punct.html">punct</a>
+      </li>
+      <li>
+      <a href="filters/railsparallelrequest.html">railsparallelrequest</a>
+      </li>
+      <li>
+      <a href="filters/range.html">range</a>
+      </li>
+      <li>
+      <a href="filters/ruby.html">ruby</a>
+      </li>
+      <li>
+      <a href="filters/sleep.html">sleep</a>
+      </li>
+      <li>
+      <a href="filters/split.html">split</a>
+      </li>
+      <li>
+      <a href="filters/sumnumbers.html">sumnumbers</a>
+      </li>
+      <li>
+      <a href="filters/syslog_pri.html">syslog_pri</a>
+      </li>
+      <li>
+      <a href="filters/throttle.html">throttle</a>
+      </li>
+      <li>
+      <a href="filters/translate.html">translate</a>
+      </li>
+      <li>
+      <a href="filters/unique.html">unique</a>
+      </li>
+      <li>
+      <a href="filters/urldecode.html">urldecode</a>
+      </li>
+      <li>
+      <a href="filters/useragent.html">useragent</a>
+      </li>
+      <li>
+      <a href="filters/uuid.html">uuid</a>
+      </li>
+      <li>
+      <a href="filters/wms.html">wms</a>
+      </li>
+      <li>
+      <a href="filters/wmts.html">wmts</a>
+      </li>
+      <li>
+      <a href="filters/xml.html">xml</a>
+      </li>
+      <li>
+      <a href="filters/zeromq.html">zeromq</a>
+      </li>
+    </ul>
+  </div>
+  <div class="doc_index_section">
+    <h3>outputs</h3>
+    <ul>
+      <li>
+      <a href="outputs/boundary.html">boundary</a>
+      </li>
+      <li>
+      <a href="outputs/circonus.html">circonus</a>
+      </li>
+      <li>
+      <a href="outputs/cloudwatch.html">cloudwatch</a>
+      </li>
+      <li>
+      <a href="outputs/csv.html">csv</a>
+      </li>
+      <li>
+      <a href="outputs/datadog.html">datadog</a>
+      </li>
+      <li>
+      <a href="outputs/datadog_metrics.html">datadog_metrics</a>
+      </li>
+      <li>
+      <a href="outputs/elasticsearch.html">elasticsearch</a>
+      </li>
+      <li>
+      <a href="outputs/elasticsearch_http.html">elasticsearch_http</a>
+      </li>
+      <li>
+      <a href="outputs/elasticsearch_river.html">elasticsearch_river</a>
+      </li>
+      <li>
+      <a href="outputs/email.html">email</a>
+      </li>
+      <li>
+      <a href="outputs/exec.html">exec</a>
+      </li>
+      <li>
+      <a href="outputs/file.html">file</a>
+      </li>
+      <li>
+      <a href="outputs/ganglia.html">ganglia</a>
+      </li>
+      <li>
+      <a href="outputs/gelf.html">gelf</a>
+      </li>
+      <li>
+      <a href="outputs/gemfire.html">gemfire</a>
+      </li>
+      <li>
+      <a href="outputs/google_bigquery.html">google_bigquery</a>
+      </li>
+      <li>
+      <a href="outputs/google_cloud_storage.html">google_cloud_storage</a>
+      </li>
+      <li>
+      <a href="outputs/graphite.html">graphite</a>
+      </li>
+      <li>
+      <a href="outputs/graphtastic.html">graphtastic</a>
+      </li>
+      <li>
+      <a href="outputs/hipchat.html">hipchat</a>
+      </li>
+      <li>
+      <a href="outputs/http.html">http</a>
+      </li>
+      <li>
+      <a href="outputs/irc.html">irc</a>
+      </li>
+      <li>
+      <a href="outputs/jira.html">jira</a>
+      </li>
+      <li>
+      <a href="outputs/juggernaut.html">juggernaut</a>
+      </li>
+      <li>
+      <a href="outputs/librato.html">librato</a>
+      </li>
+      <li>
+      <a href="outputs/loggly.html">loggly</a>
+      </li>
+      <li>
+      <a href="outputs/lumberjack.html">lumberjack</a>
+      </li>
+      <li>
+      <a href="outputs/metriccatcher.html">metriccatcher</a>
+      </li>
+      <li>
+      <a href="outputs/mongodb.html">mongodb</a>
+      </li>
+      <li>
+      <a href="outputs/nagios.html">nagios</a>
+      </li>
+      <li>
+      <a href="outputs/nagios_nsca.html">nagios_nsca</a>
+      </li>
+      <li>
+      <a href="outputs/null.html">null</a>
+      </li>
+      <li>
+      <a href="outputs/opentsdb.html">opentsdb</a>
+      </li>
+      <li>
+      <a href="outputs/pagerduty.html">pagerduty</a>
+      </li>
+      <li>
+      <a href="outputs/pipe.html">pipe</a>
+      </li>
+      <li>
+      <a href="outputs/rabbitmq.html">rabbitmq</a>
+      </li>
+      <li>
+      <a href="outputs/rackspace.html">rackspace</a>
+      </li>
+      <li>
+      <a href="outputs/redis.html">redis</a>
+      </li>
+      <li>
+      <a href="outputs/redmine.html">redmine</a>
+      </li>
+      <li>
+      <a href="outputs/riak.html">riak</a>
+      </li>
+      <li>
+      <a href="outputs/riemann.html">riemann</a>
+      </li>
+      <li>
+      <a href="outputs/s3.html">s3</a>
+      </li>
+      <li>
+      <a href="outputs/sns.html">sns</a>
+      </li>
+      <li>
+      <a href="outputs/solr_http.html">solr_http</a>
+      </li>
+      <li>
+      <a href="outputs/sqs.html">sqs</a>
+      </li>
+      <li>
+      <a href="outputs/statsd.html">statsd</a>
+      </li>
+      <li>
+      <a href="outputs/stdout.html">stdout</a>
+      </li>
+      <li>
+      <a href="outputs/stomp.html">stomp</a>
+      </li>
+      <li>
+      <a href="outputs/syslog.html">syslog</a>
+      </li>
+      <li>
+      <a href="outputs/tcp.html">tcp</a>
+      </li>
+      <li>
+      <a href="outputs/udp.html">udp</a>
+      </li>
+      <li>
+      <a href="outputs/websocket.html">websocket</a>
+      </li>
+      <li>
+      <a href="outputs/xmpp.html">xmpp</a>
+      </li>
+      <li>
+      <a href="outputs/zabbix.html">zabbix</a>
+      </li>
+      <li>
+      <a href="outputs/zeromq.html">zeromq</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="clear"></div>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

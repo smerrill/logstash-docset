@@ -1,0 +1,586 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h2>kv</h2>
+<h3>Milestone: <a href="../plugin-milestones.html">2</a>
+</h3>
+
+<p>This filter helps automatically parse messages (or specific event fields)
+which are of the ‘foo=bar’ variety.</p>
+
+<p>For example, if you have a log message which contains ‘ip=1.2.3.4
+error=REFUSED’, you can parse those automatically by configuring:</p>
+
+<pre><code>filter {
+  kv { }
+}
+</code></pre>
+
+<p>The above will result in a message of “ip=1.2.3.4 error=REFUSED” having
+the fields:</p>
+
+<ul>
+  <li>ip: 1.2.3.4</li>
+  <li>error: REFUSED</li>
+</ul>
+
+<p>This is great for postfix, iptables, and other types of logs that
+tend towards ‘key=value’ syntax.</p>
+
+<p>You can configure any arbitrary strings to split your data on,
+in case your data is not structured using ‘=’ signs and whitespace.
+For example, this filter can also be used to parse query parameters like
+‘foo=bar&amp;baz=fizz’ by setting the <code>field_split</code> parameter to “&amp;”.</p>
+
+
+<h3> Synopsis </h3>
+
+This is what it might look like in your config file:
+
+<pre><code>filter {
+  kv {
+    <a href="#add_field">add_field</a> =&gt; ... # hash (optional), default: {}
+    <a href="#add_tag">add_tag</a> =&gt; ... # array (optional), default: []
+    <a href="#default_keys">default_keys</a> =&gt; ... # hash (optional), default: {}
+    <a href="#exclude_keys">exclude_keys</a> =&gt; ... # array (optional), default: []
+    <a href="#field_split">field_split</a> =&gt; ... # string (optional), default: " "
+    <a href="#include_keys">include_keys</a> =&gt; ... # array (optional), default: []
+    <a href="#prefix">prefix</a> =&gt; ... # string (optional), default: ""
+    <a href="#remove_field">remove_field</a> =&gt; ... # array (optional), default: []
+    <a href="#remove_tag">remove_tag</a> =&gt; ... # array (optional), default: []
+    <a href="#source">source</a> =&gt; ... # string (optional), default: "message"
+    <a href="#target">target</a> =&gt; ... # string (optional)
+    <a href="#trim">trim</a> =&gt; ... # string (optional)
+    <a href="#trimkey">trimkey</a> =&gt; ... # string (optional)
+    <a href="#value_split">value_split</a> =&gt; ... # string (optional), default: "="
+  }
+}
+</code></pre>
+
+<h3> Details </h3>
+
+<h4> 
+  <a name="add_field">
+    add_field
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#hash">hash</a> </li>
+  <li> Default value is {} </li>
+</ul>
+
+<p>If this filter is successful, add any arbitrary fields to this event.
+Field names can be dynamic and include parts of the event using the %{field}
+Example:</p>
+
+<pre><code>filter {
+  kv {
+    add_field =&gt; { "foo_%{somefield}" =&gt; "Hello world, from %{host}" }
+  }
+}
+
+# You can also add multiple fields at once:
+
+filter {
+  kv {
+    add_field =&gt; { 
+      "foo_%{somefield}" =&gt; "Hello world, from %{host}"
+      "new_field" =&gt; "new_static_value"
+    }
+  }
+}
+</code></pre>
+
+<p>If the event has field “somefield” == “hello” this filter, on success,
+would add field “foo_hello” if it is present, with the
+value above and the %{host} piece replaced with that value from the
+event. The second example would also add a hardcoded field. </p>
+
+
+<h4> 
+  <a name="add_tag">
+    add_tag
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>If this filter is successful, add arbitrary tags to the event.
+Tags can be dynamic and include parts of the event using the %{field}
+syntax. Example:</p>
+
+<pre><code>filter {
+  kv {
+    add_tag =&gt; [ "foo_%{somefield}" ]
+  }
+}
+
+# You can also add multiple tags at once:
+filter {
+  kv {
+    add_tag =&gt; [ "foo_%{somefield}", "taggedy_tag"]
+  }
+}
+</code></pre>
+
+<p>If the event has field “somefield” == “hello” this filter, on success,
+would add a tag “foo_hello” (and the second example would of course add a “taggedy_tag” tag).</p>
+
+
+<h4> 
+  <a name="default_keys">
+    default_keys
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#hash">hash</a> </li>
+  <li> Default value is {} </li>
+</ul>
+
+<p>A hash specifying the default keys and their values which should be added to the event
+in case these keys do not exist in the source field being parsed.</p>
+
+<pre><code>filter {
+  kv {
+    default_keys =&gt; [ "from", "logstash@example.com",
+                     "to", "default@dev.null" ]
+  }
+}
+</code></pre>
+
+
+<h4> 
+  <a name="exclude_keys">
+    exclude_keys
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>An array specifying the parsed keys which should not be added to the event.
+By default no keys will be excluded.</p>
+
+<p>For example, consider a source like “Hey, from=<abc>, to=def foo=bar". 
+To exclude "from" and "to", but retain the "foo" key, you could use this configuration:
+    filter {
+      kv {
+        exclude_keys =&gt; [ "from", "to" ]
+      }
+    }</abc></p>
+
+
+<h4> 
+  <a name="exclude_tags">
+    exclude_tags
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>Only handle events without all/any (controlled by exclude_any config
+option) of these tags.
+Optional.</p>
+
+
+<h4> 
+  <a name="field_split">
+    field_split
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is " " </li>
+</ul>
+
+<p>A string of characters to use as delimiters for parsing out key-value pairs.</p>
+
+<p>These characters form a regex character class and thus you must escape special regex
+characters like ‘[’ or ‘]’ using ‘'.</p>
+
+<h4 id="example-with-url-query-strings">Example with URL Query Strings</h4>
+
+<p>For example, to split out the args from a url query string such as
+‘?pin=12345~0&amp;d=123&amp;e=foo@bar.com&amp;oq=bobo&amp;ss=12345’:</p>
+
+<pre><code>filter {
+  kv {
+    field_split =&gt; "&amp;?"
+  }
+}
+</code></pre>
+
+<p>The above splits on both “&amp;” and “?” characters, giving you the following
+fields:</p>
+
+<ul>
+  <li>pin: 12345~0</li>
+  <li>d: 123</li>
+  <li>e: foo@bar.com</li>
+  <li>oq: bobo</li>
+  <li>ss: 12345</li>
+</ul>
+
+
+<h4> 
+  <a name="include_keys">
+    include_keys
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>An array specifying the parsed keys which should be added to the event.
+By default all keys will be added.</p>
+
+<p>For example, consider a source like “Hey, from=<abc>, to=def foo=bar". 
+To include "from" and "to", but exclude the "foo" key, you could use this configuration:
+    filter {
+      kv {
+        include_keys =&gt; [ "from", "to" ]
+      }
+    }</abc></p>
+
+
+<h4> 
+  <a name="prefix">
+    prefix
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "" </li>
+</ul>
+
+<p>A string to prepend to all of the extracted keys.</p>
+
+<p>For example, to prepend arg_ to all keys:</p>
+
+<pre><code>filter { kv { prefix =&gt; "arg_" } }
+</code></pre>
+
+
+<h4> 
+  <a name="remove_field">
+    remove_field
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>If this filter is successful, remove arbitrary fields from this event.
+Fields names can be dynamic and include parts of the event using the %{field}
+Example:</p>
+
+<pre><code>filter {
+  kv {
+    remove_field =&gt; [ "foo_%{somefield}" ]
+  }
+}
+
+# You can also remove multiple fields at once:
+
+filter {
+  kv {
+    remove_field =&gt; [ "foo_%{somefield}" "my_extraneous_field" ]
+  }
+}
+</code></pre>
+
+<p>If the event has field “somefield” == “hello” this filter, on success,
+would remove the field with name “foo_hello” if it is present. The second 
+example would remove an additional, non-dynamic field.</p>
+
+
+<h4> 
+  <a name="remove_tag">
+    remove_tag
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>If this filter is successful, remove arbitrary tags from the event.
+Tags can be dynamic and include parts of the event using the %{field}
+syntax. Example:</p>
+
+<pre><code>filter {
+  kv {
+    remove_tag =&gt; [ "foo_%{somefield}" ]
+  }
+}
+
+# You can also remove multiple tags at once:
+
+filter {
+  kv {
+    remove_tag =&gt; [ "foo_%{somefield}", "sad_unwanted_tag"]
+  }
+}
+</code></pre>
+
+<p>If the event has field “somefield” == “hello” this filter, on success,
+would remove the tag “foo_hello” if it is present. The second example
+would remove a sad, unwanted tag as well. </p>
+
+
+<h4> 
+  <a name="source">
+    source
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "message" </li>
+</ul>
+
+<p>The field to perform ‘key=value’ searching on</p>
+
+<p>For example, to process the <code>not_the_message</code> field:</p>
+
+<pre><code>filter { kv { source =&gt; "not_the_message" } }
+</code></pre>
+
+
+<h4> 
+  <a name="tags">
+    tags
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#array">array</a> </li>
+  <li> Default value is [] </li>
+</ul>
+
+<p>Only handle events with all/any (controlled by include_any config option) of these tags.
+Optional.</p>
+
+
+<h4> 
+  <a name="target">
+    target
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>The name of the container to put all of the key-value pairs into.</p>
+
+<p>If this setting is omitted, fields will be written to the root of the
+event, as individual fields.</p>
+
+<p>For example, to place all keys into the event field kv:</p>
+
+<pre><code>filter { kv { target =&gt; "kv" } }
+</code></pre>
+
+
+<h4> 
+  <a name="trim">
+    trim
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>A string of characters to trim from the value. This is useful if your
+values are wrapped in brackets or are terminated with commas (like postfix
+logs).</p>
+
+<p>These characters form a regex character class and thus you must escape special regex
+characters like ‘[’ or ‘]’ using ‘'.</p>
+
+<p>For example, to strip ‘&lt;’, ‘&gt;’, ‘[’, ‘]’ and ‘,’ characters from values:</p>
+
+<pre><code>filter {
+  kv {
+    trim =&gt; "&lt;&gt;\[\],"
+  }
+}
+</code></pre>
+
+
+<h4> 
+  <a name="trimkey">
+    trimkey
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> There is no default value for this setting. </li>
+</ul>
+
+<p>A string of characters to trim from the key. This is useful if your
+keys are wrapped in brackets or start with space.</p>
+
+<p>These characters form a regex character class and thus you must escape special regex
+characters like ‘[’ or ‘]’ using ‘'.</p>
+
+<p>For example, to strip ‘&lt;’ ‘&gt;’ ‘[’ ’]’ and ‘,’ characters from keys:</p>
+
+<pre><code>filter {
+  kv {
+    trimkey =&gt; "&lt;&gt;\[\],"
+  }
+}
+</code></pre>
+
+
+<h4> 
+  <a name="type">
+    type
+     <strong>DEPRECATED</strong>
+</a>
+</h4>
+
+<ul>
+  <li> DEPRECATED WARNING: This config item is deprecated. It may be removed in a further version. </li>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "" </li>
+</ul>
+
+<p>Note that all of the specified routing options (type,tags.exclude_tags,include_fields,exclude_fields)
+must be met in order for the event to be handled by the filter.
+The type to act on. If a type is given, then this filter will only
+act on messages with the same type. See any input plugin’s “type”
+attribute for more.
+Optional.</p>
+
+
+<h4> 
+  <a name="value_split">
+    value_split
+    
+</a>
+</h4>
+
+<ul>
+  <li> Value type is <a href="../configuration.html#string">string</a> </li>
+  <li> Default value is "=" </li>
+</ul>
+
+<p>A string of characters to use as delimiters for identifying key-value relations.</p>
+
+<p>These characters form a regex character class and thus you must escape special regex
+characters like ‘[’ or ‘]’ using ‘'.</p>
+
+<p>For example, to identify key-values such as
+‘key1:value1 key2:value2’:</p>
+
+<pre><code>filter { kv { value_split =&gt; ":" } }
+</code></pre>
+
+
+
+<hr>
+
+This is documentation from <a href="https://github.com/logstash/logstash/blob/v1.4.2/lib/logstash/filters/kv.rb">lib/logstash/filters/kv.rb</a>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

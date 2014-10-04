@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h1>Logstash repositories</h1>
+
+<p>We also have Logstash available as APT and YUM repositories.</p>
+
+<p>Our public signing key can be found on the <a href="http://packages.elasticsearch.org/GPG-KEY-elasticsearch">Elasticsearch packages apt GPG signing key page</a></p>
+
+<h2>Apt based distributions</h2>
+
+<p>Add the key:</p>
+
+<pre><code> wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -
+</code></pre>
+
+<p>Add the repo to /etc/apt/sources.list</p>
+
+<pre><code> deb http://packages.elasticsearch.org/logstash/1.4/debian stable main
+</code></pre>
+
+<h2>YUM based distributions</h2>
+
+<p>Add the key:</p>
+
+<pre><code> rpm --import http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+</code></pre>
+
+<p>Add the repo to /etc/yum.repos.d/ directory</p>
+
+<pre><code> [logstash-1.4]
+ name=logstash repository for 1.4.x packages
+ baseurl=http://packages.elasticsearch.org/logstash/1.4/centos
+ gpgcheck=1
+ gpgkey=http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+ enabled=1
+</code></pre>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

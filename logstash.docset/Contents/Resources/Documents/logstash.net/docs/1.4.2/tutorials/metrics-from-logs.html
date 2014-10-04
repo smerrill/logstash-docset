@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h1>Pull metrics from logs</h1>
+
+<p>Logs are more than just text. How many customers signed up today? How many HTTP
+errors happened this week? When was your last puppet run?</p>
+
+<p>Apache logs give you the http response code and bytes sent - that's useful in a
+graph. Metrics occur in logs so frequently there are piles of tools available to
+help process them.</p>
+
+<p>Logstash can help (and even replace some tools you might already be using).</p>
+
+<h2>Example: Replacing Etsy's Logster</h2>
+
+<p><a href="https://github.com/etsy">Etsy</a> has some excellent open source tools. One of
+them, <a href="https://github.com/etsy/logster">logster</a>, is meant to help you pull
+metrics from logs and ship them to <a href="http://graphite.wikidot.com/">graphite</a> so
+you can make pretty graphs of those metrics.</p>
+
+<p>One sample logster parser is one that pulls http response codes out of your
+apache logs: <a href="https://github.com/etsy/logster/blob/master/logster/parsers/SampleLogster.py">SampleLogster.py</a></p>
+
+<p>The above code is roughly 50 lines of python and only solves one specific
+problem in only apache logs: count http response codes by major number (1xx,
+2xx, 3xx, etc). To be completely fair, you could shrink the code required for
+a Logster parser, but size is not strictly the point, here.</p>
+
+<h2>Keep it simple</h2>
+
+<p>Logstash can do more than the above, simpler, and without much coding skill:</p>
+
+<pre><code>input {
+  file { 
+    path =&gt; "/var/log/apache/access.log" 
+    type =&gt; "apache-access"
+  }
+}
+
+filter {
+  grok { 
+    type =&gt; "apache-access"
+    pattern =&gt; "%{COMBINEDAPACHELOG}" 
+  }
+}
+
+output {
+  statsd { 
+    # Count one hit every event by response
+    increment =&gt; "apache.response.%{response}" 
+  }
+}
+</code></pre>
+
+<p>The above uses grok to parse fields out of apache logs and using the statsd
+output to increment counters based on the response code. Of course, now that we
+are parsing apache logs fully, we can trivially add additional metrics:</p>
+
+<pre><code>output {
+  statsd {
+    # Count one hit every event by response
+    increment =&gt; "apache.response.%{response}"
+
+    # Use the 'bytes' field from the apache log as the count value.
+    count =&gt; [ "apache.bytes", "%{bytes}" ]
+  }
+}
+</code></pre>
+
+<p>Now adding additional metrics is just one more line in your logstash config
+file. BTW, the 'statsd' output writes to another Etsy tool,
+<a href="https://github.com/etsy/statsd">statsd</a>, which helps build counters/latency
+data and ship it to graphite for graphing.</p>
+
+<p>Using the logstash config above and a bunch of apache access requests, you might end up
+with a graph that looks like this:</p>
+
+<p><img src="media/frontend-response-codes.png" alt="apache response codes graphed with graphite, fed data with logstash"></p>
+
+<p>The point made above is not "logstash is better than Logster" - the point is
+that logstash is a general-purpose log management and pipelining tool and that
+while you can centralize logs with logstash, you can read, modify, and write
+them to and from just about anywhere.</p>
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>

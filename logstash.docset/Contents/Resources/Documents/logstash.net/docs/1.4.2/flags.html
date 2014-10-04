@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <title>logstash - open source log management</title>
+  <link rel="stylesheet" href="../..//style.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+      <a href="http://logstash.net/.html"><img src="../..//images/logo.png" alt="logstash"></a>
+      <div class="nav">
+        <a href="http://logstash.net/.html">home</a>
+        <a href="/docs/1.4.2.html">docs</a>
+        <a href="/docs/1.4.2/learn.html">about</a>
+        <a href="https://github.com/elasticsearch/logstash/issues">bugs</a>
+      </div>
+    </div>
+    <div id="content_right">
+      <!--main content goes here, yo!-->
+      <div class="content_wrapper">
+        <img src="../..//images/logstash.png" alt="logstash" class="mascot" style="float: right;">
+         <h1>Command-line flags</h1>
+
+<h2>Agent</h2>
+
+<p>The logstash agent has the following flags (also try using the '--help' flag)</p>
+
+<dl>
+<dt> -f, --config CONFIGFILE </dt>
+<dd> Load the logstash config from a specific file, directory, or a
+wildcard. If given a directory or wildcard, config files will be read
+from the directory in alphabetical order. </dd>
+<dt> -e CONFIGSTRING </dt>
+<dd> Use the given string as the configuration data. Same syntax as the
+config file. If not input is specified, 'stdin { type =&gt; stdin }' is
+default. If no output is specified, 'stdout { debug =&gt; true }}' is
+default. </dd>
+<dt> -w, --filterworkers COUNT </dt>
+<dd> Run COUNT filter workers (default: 1) </dd>
+<dt> --watchdog-timeout TIMEOUT </dt>
+<dd> Set watchdog timeout value in seconds. Default is 10.</dd>
+<dt> -l, --log FILE </dt>
+<dd> Log to a given path. Default is to log to stdout </dd>
+<dt> --verbose </dt>
+<dd> Increase verbosity to the first level, less verbose.</dd>
+<dt> --debug </dt>
+<dd> Increase verbosity to the last level, more verbose.</dd>
+<dt> -v  </dt>
+<dd> *DEPRECATED: see --verbose/debug* Increase verbosity. There are multiple levels of verbosity available with
+'-vv' currently being the highest </dd>
+<dt> --pluginpath PLUGIN_PATH </dt>
+<dd> A colon-delimted path to find other logstash plugins in </dd>
+</dl>
+
+
+<h2>Web</h2>
+
+<dl>
+<dt> -a, --address ADDRESS </dt>
+<dd>Address on which to start webserver. Default is 0.0.0.0.</dd>
+<dt> -p, --port PORT</dt>
+<dd>Port on which to start webserver. Default is 9292.</dd>
+</dl>
+
+
+
+
+      </div>
+      <div class="clear">
+      </div>
+    </div>
+  </div>
+  <!--closes main container div-->
+  <div class="clear">
+  </div>
+  <div class="footer">
+    <p>
+      Hello! I'm your friendly footer. If you're actually reading this, I'm impressed.
+    </p>
+  </div>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6522917-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+/* <![CDATA[ */
+  var google_conversion_id = 985891458;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/985891458/?value=0&amp;guid=ON&amp;script=0">
+    </div>
+  </noscript>
+  <script src="/js/patch.js?1.4.2"></script>
+  </body>
+</html>
